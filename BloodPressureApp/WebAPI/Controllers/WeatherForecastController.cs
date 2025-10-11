@@ -18,7 +18,25 @@ namespace WebAPI.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Gets weather forecast summaries
+        /// </summary>
+        /// <returns>All weather forecast summaries</returns>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     GET /GetWeatherForecast
+        ///     {
+        ///         "Date": "2025-10-10",
+        ///         "TemperatureC": -20,
+        ///         "Summary": "Freezing"
+        ///     }
+        /// 
+        /// </remarks>
+        /// <response code="200">Returns array of weather forecast summaries</response>
         [HttpGet(Name = "GetWeatherForecast")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
