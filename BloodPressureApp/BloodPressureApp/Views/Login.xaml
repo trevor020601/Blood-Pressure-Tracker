@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BloodPressureApp.Views.Login"
+             Title="Login">
+    <Grid>
+        <VerticalStackLayout Margin="30,0,30,0">
+            <Label FontAttributes="Bold"
+                   FontFamily="OpenSansSemibold"
+                   FontSize="Medium"
+                   Text="Welcome!"
+                   TextColor="Gray" />
+            <Label FontFamily="OpenSansRegular" 
+                   Text="Log in to continue"
+                   TextColor="LightGray"/>
+            <Grid ColumnDefinitions=".2*,.8*">
+                <RoundRectangle BackgroundColor="LightGray"
+                                CornerRadius="10"
+                                HeightRequest="60"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                WidthRequest="60"/>
+                <Image HorizontalOptions="Center">
+                    <Image.Source>
+                        <FontImageSource FontFamily="FASolid" 
+                                         Glyph="&#xf0e0;"
+                                         Size="44"
+                                         Color="Purple"/>
+                    </Image.Source>
+                </Image>
+                <Entry Grid.Column="1"
+                       Placeholder="EMAIL"
+                       VerticalOptions="Center"/>
+            </Grid>
+            <Grid ColumnDefinitions=".2*,.8*">
+                <RoundRectangle BackgroundColor="LightGray"
+                                CornerRadius="10"
+                                HeightRequest="60"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                WidthRequest="60"/>
+                <Image HorizontalOptions="Center">
+                    <Image.Source>
+                        <FontImageSource FontFamily="FASolid" 
+                                         Glyph="&#xf084;"
+                                         Size="44"
+                                         Color="Purple"/>
+                    </Image.Source>
+                </Image>
+                <Entry Grid.Column="1"
+                       Placeholder="PASSWORD"
+                       VerticalOptions="Center"
+                       IsPassword="True"/>
+            </Grid>
+            <Button Margin="0,20,0,0"
+                    BackgroundColor="Purple"
+                    HeightRequest="60"
+                    Text="Login"
+                    TextColor="White"/>
+            <Label Margin="0,20,0,-10"
+                   HorizontalOptions="Center"
+                   Text="Forgot Password?"
+                   TextColor="Blue"
+                   TextDecorations="Underline"/>
+            <Button Margin="0,30,0,0"
+                    BackgroundColor="LightGray"
+                    HeightRequest="60"
+                    Text="Create Account"
+                    TextColor="Purple"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

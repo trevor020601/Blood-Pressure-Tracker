@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibrary", "SharedLibrary\SharedLibrary.csproj", "{2BB83C70-A316-4E30-DA94-F03E02E54AFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BloodPressureApp", "BloodPressureApp\BloodPressureApp.csproj", "{E1F06001-14B0-4CCB-B308-B2B3C6D8599C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2BB83C70-A316-4E30-DA94-F03E02E54AFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BB83C70-A316-4E30-DA94-F03E02E54AFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BB83C70-A316-4E30-DA94-F03E02E54AFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1F06001-14B0-4CCB-B308-B2B3C6D8599C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1F06001-14B0-4CCB-B308-B2B3C6D8599C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1F06001-14B0-4CCB-B308-B2B3C6D8599C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1F06001-14B0-4CCB-B308-B2B3C6D8599C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
