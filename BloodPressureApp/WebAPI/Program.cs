@@ -1,9 +1,11 @@
 using Microsoft.OpenApi.Models;
+using SharedLibrary.Extensions;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddServicesByAttribute();
 
 builder.Services.AddControllers();
 
