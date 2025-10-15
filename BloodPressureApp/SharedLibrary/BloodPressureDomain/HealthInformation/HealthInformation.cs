@@ -1,4 +1,6 @@
-﻿namespace SharedLibrary.BloodPressureDomain.HealthInformation;
+﻿using SharedLibrary.Extensions;
+
+namespace SharedLibrary.BloodPressureDomain.HealthInformation;
 
 public class HealthInformation
 {
@@ -12,7 +14,15 @@ public class HealthInformation
 
     public DateTime DateOfBirth { get; private set; }
 
-    // Possibly add a property for age
+    // I don't think this should be in the domain...
+    private int _age;
+    public int Age {
+        get { return _age; }
+        set
+        {
+            _age = DateTimeExtensions.CalculateAge(new DateTimeRange(DateOfBirth, DateTime.Now));
+        } 
+    }
 
     public double Weight { get; private set; }
 
