@@ -6,11 +6,11 @@ public interface IDateTimeRange
     DateTime End { get; }
 }
 
-public class DateTimeRange : IDateTimeRange
+public readonly record struct DateTimeRange : IDateTimeRange
 {
-    public DateTime Start { get; set; }
+    public DateTime Start { get; }
 
-    public DateTime End { get; set; }
+    public DateTime End { get; }
 
     public DateTimeRange(DateTime start, DateTime end)
     {
