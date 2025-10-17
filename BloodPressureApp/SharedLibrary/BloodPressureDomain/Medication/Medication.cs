@@ -1,10 +1,12 @@
-﻿namespace SharedLibrary.BloodPressureDomain.Medication;
+﻿using SharedLibrary.BloodPressureDomain.User;
+
+namespace SharedLibrary.BloodPressureDomain.Medication;
 
 public class Medication
 {
-    public Guid Id { get; private set; }
+    public MedicationId Id { get; private set; } = default!;
 
-    public Guid UserId { get; private set; }
+    public UserId UserId { get; private set; } = default!;
 
     public string Name { get; private set; } = default!;
 

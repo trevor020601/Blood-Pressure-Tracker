@@ -1,12 +1,14 @@
-﻿namespace SharedLibrary.BloodPressureDomain.TrackingDevice;
+﻿using SharedLibrary.BloodPressureDomain.User;
+
+namespace SharedLibrary.BloodPressureDomain.TrackingDevice;
 
 // Questionable if I even want this domain...
 
 public class TrackingDevice
 {
-    public Guid Id { get; private set; }
+    public TrackingDeviceId Id { get; private set; } = default!;
 
-    public Guid UserId { get; private set; }
+    public UserId UserId { get; private set; } = default!;
 
     public string Manufacturer { get; private set; } = default!;
 

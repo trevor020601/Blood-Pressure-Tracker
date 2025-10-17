@@ -1,12 +1,13 @@
-﻿using SharedLibrary.Extensions;
+﻿using SharedLibrary.BloodPressureDomain.User;
+using SharedLibrary.Extensions;
 
 namespace SharedLibrary.BloodPressureDomain.HealthInformation;
 
 public class HealthInformation
 {
-    public Guid Id { get; private set; }
+    public HealthInformationId Id { get; private set; } = default!;
 
-    public Guid UserId { get; private set; }
+    public UserId UserId { get; private set; } = default!;
 
     public string Name { get; private set; } = default!;
 

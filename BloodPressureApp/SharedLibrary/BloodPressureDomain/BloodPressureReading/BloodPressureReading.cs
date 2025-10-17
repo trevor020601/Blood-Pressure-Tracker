@@ -1,10 +1,12 @@
-﻿namespace SharedLibrary.BloodPressureDomain.BloodPressureReading;
+﻿using SharedLibrary.BloodPressureDomain.User;
+
+namespace SharedLibrary.BloodPressureDomain.BloodPressureReading;
 
 public class BloodPressureReading
 {
-    public Guid Id { get; private set; }
+    public BloodPressureReadingId Id { get; private set; } = default!;
 
-    public Guid UserId { get; private set; }
+    public UserId UserId { get; private set; } = default!;
 
     public int Systolic { get; private set; }
 
