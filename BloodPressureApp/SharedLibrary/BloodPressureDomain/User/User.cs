@@ -6,10 +6,12 @@ public class User
 
     public string Email { get; private set; } = default!;
 
-    // Should this be a hashed string?
-    public HashCode Password { get; private set; }
+    // Stored as a hash
+    public string Password { get; private set; } = default!;
 
     //public DateTime CreatedDate { get; private set; }
+
+    //public string Name { get; private set; } = default!;
 
     public AccountStatus Status { get; private set; }
 
