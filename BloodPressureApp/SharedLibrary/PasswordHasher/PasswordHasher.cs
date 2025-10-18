@@ -20,7 +20,7 @@ public sealed class PasswordHasher : IPasswordHasher
         return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
     }
 
-    public static bool Verify(string password, string passwordHash)
+    public bool Verify(string password, string passwordHash)
     {
         string[] parts = passwordHash.Split('-');
         byte[] hash = Convert.FromHexString(parts[0]);
