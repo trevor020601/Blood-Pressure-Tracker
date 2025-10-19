@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SharedLibrary.BloodPressureDomain.User;
+using SharedLibrary.UnitOfWork;
 
 namespace SharedDataSource;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : DbContext, IUnitOfWork
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -13,4 +15,6 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
+
+    public DbSet<User> Users { get; set; }
 }
