@@ -6,7 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<!--Enable to suppress warnings for missing XML comments-->
-	<!--<NoWarn>$(NoWarn);1591</NoWarn>-->
+	<!-- Temporarily enabling this until I'm ready to get rid of default code, but want this enabled to force myself to document -->
+	<NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
