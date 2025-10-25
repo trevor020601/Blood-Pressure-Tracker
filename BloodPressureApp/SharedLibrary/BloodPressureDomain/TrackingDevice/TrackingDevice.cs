@@ -1,14 +1,25 @@
-﻿using SharedLibrary.BloodPressureDomain.User;
-
-namespace SharedLibrary.BloodPressureDomain.TrackingDevice;
+﻿namespace SharedLibrary.BloodPressureDomain.TrackingDevice;
 
 // Questionable if I even want this domain...
 
 public class TrackingDevice
 {
-    public TrackingDeviceId Id { get; private set; } = default!;
+    internal TrackingDevice(TrackingDeviceId id,
+                            string manufacturer, 
+                            string model,
+                            string serialNumber,
+                            ConnectionType connectionType,
+                            DateTime lastSyncDate)
+    {
+        Id = id;
+        Manufacturer = manufacturer;
+        Model = model;
+        SerialNumber = serialNumber;
+        ConnectionType = connectionType;
+        LastSyncDate = lastSyncDate;
+    }
 
-    public UserId UserId { get; private set; } = default!;
+    public TrackingDeviceId Id { get; private set; } = default!;
 
     public string Manufacturer { get; private set; } = default!;
 
