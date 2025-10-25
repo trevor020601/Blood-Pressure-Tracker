@@ -9,7 +9,11 @@ public class HealthInformation
 
     public UserId UserId { get; private set; } = default!;
 
-    public string Name { get; private set; } = default!;
+    public string FirstName { get; private set; } = default!;
+
+    public string LastName { get; private set; } = default!;
+
+    public string? MiddleName { get; private set; }
 
     public Sex Gender { get; private set; }
 

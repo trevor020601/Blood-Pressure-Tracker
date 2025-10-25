@@ -1,10 +1,12 @@
-﻿namespace SharedLibrary.BloodPressureDomain.User;
+﻿using SharedLibrary.BloodPressureDomain.ValueObjects;
+
+namespace SharedLibrary.BloodPressureDomain.User;
 
 public class User
 {
     public UserId Id { get; private set; } = default!;
 
-    public string Email { get; private set; } = default!;
+    public Email Email { get; private set; } = default!;
 
     // Stored as a hash
     public string Password { get; private set; } = default!;

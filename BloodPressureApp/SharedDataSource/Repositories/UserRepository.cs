@@ -15,18 +15,21 @@ public sealed class UserRepository : IUserRepository
     public async Task<User?> GetByIdAsync(UserId id)
     {
         return await _context.Users
+            .AsNoTracking()
             .SingleOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task<User?> GetByEmail(string email)
     {
         return await _context.Users
-            .SingleOrDefaultAsync(u => u.Email == email);
+            .AsNoTracking()
+            .SingleOrDefaultAsync(u => u.Email.Value == email);
     }
 
     public async Task<bool> Exists(string email)
     {
         return await _context.Users
-            .AnyAsync(u => u.Email == email);
+            .AsNoTracking()
+            .AnyAsync(u => u.Email.Value == email);
     }
 }
