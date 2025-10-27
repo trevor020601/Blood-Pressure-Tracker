@@ -19,6 +19,10 @@ public class Patient
 
     public HealthInformationId HealthInformationId { get; private set; } = default!;
 
+    public IReadOnlyList<BloodPressureReading.BloodPressureReading> BloodPressureReadings => [.. _bloodPressureReadings];
+
+    public IReadOnlyList<TrackingDevice.TrackingDevice> TrackingDevices => [.. _trackingDevices];
+
     public static Patient Create(User.User user, 
                                  HealthInformation.HealthInformation healthInformation)
     {

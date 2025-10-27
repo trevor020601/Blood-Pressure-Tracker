@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SharedDataSource.Converters;
 using SharedLibrary.BloodPressureDomain.User;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
 
@@ -29,7 +30,6 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Password).IsRequired();
 
-        // TODO: This should be fine for mapping to AccountStatus enum, but research other ways?
-        builder.Property(u => u.Status).HasConversion<int>().IsRequired();
+        builder.Property(u => u.Status).HasConversion(new EnumConverter<AccountStatus>()).IsRequired();
     }
 }

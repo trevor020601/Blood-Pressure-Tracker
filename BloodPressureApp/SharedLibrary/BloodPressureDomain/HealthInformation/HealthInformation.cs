@@ -39,6 +39,8 @@ public class HealthInformation
     // BMI?
     // Blood type?
 
+    public IReadOnlyList<Medication.Medication> Medications => [.. _medications];
+
     public static HealthInformation Create(Patient.Patient patient,
                                            string firstName,
                                            string lastName,
