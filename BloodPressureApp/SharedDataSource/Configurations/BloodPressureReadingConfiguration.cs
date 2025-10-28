@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SharedDataSource.Converters;
 using SharedLibrary.BloodPressureDomain.BloodPressureReading;
 using SharedLibrary.BloodPressureDomain.TrackingDevice;
 
@@ -20,5 +21,21 @@ internal class BloodPressureReadingConfiguration : IEntityTypeConfiguration<Bloo
             trackingDeviceId => trackingDeviceId.Value,
             value => new TrackingDeviceId(value)
         );
+
+        builder.Property(b => b.Systolic).IsRequired();
+
+        builder.Property(b => b.Diastolic).IsRequired();
+
+        builder.Property(b => b.HeartRate).IsRequired();
+
+        builder.Property(b => b.Weight).IsRequired();
+
+        builder.Property(b => b.ReadingDate).IsRequired();
+
+        builder.Property(b => b.Note);
+
+        builder.Property(b => b.MeasurementSource).HasConversion(new EnumConverter<Source>()).IsRequired();
+
+        builder.Property(b => b.Position).HasConversion(new EnumConverter<Position>());
     }
 }

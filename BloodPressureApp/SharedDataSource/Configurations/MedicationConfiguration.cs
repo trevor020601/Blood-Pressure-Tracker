@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SharedDataSource.Converters;
 using SharedLibrary.BloodPressureDomain.Medication;
 
 namespace SharedDataSource.Configurations;
@@ -19,8 +20,14 @@ internal class MedicationConfiguration : IEntityTypeConfiguration<Medication>
 
         builder.Property(m => m.Schedule).IsRequired();
 
-        // This is questionable...
-        builder.ComplexProperty(m => m.Dosage);
+        builder.OwnsOne(
+            m => m.Dosage,
+            dosageBuilder =>
+            {
+                dosageBuilder.Property(p => p.Value);
+                dosageBuilder.Property(p => p.Unit).HasConversion(new EnumConverter<Unit>());
+            }
+        );
 
         builder.Property(m => m.StartDate).IsRequired();
 
