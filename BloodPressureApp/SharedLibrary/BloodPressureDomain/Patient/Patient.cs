@@ -58,6 +58,16 @@ public class Patient
         );
     }
 
+    public void RemoveBloodPressureReading(BloodPressureReadingId bloodPressureReadingId)
+    {
+        var bloodPressureReading = _bloodPressureReadings.FirstOrDefault(b =>  b.Id == bloodPressureReadingId);
+        if (bloodPressureReading is null)
+        {
+            return;
+        }
+        _bloodPressureReadings.Remove(bloodPressureReading);
+    }
+
     public void AddTrackingDevice(string manufacturer,
                                   string model,
                                   string serialNumber,
@@ -72,5 +82,15 @@ public class Patient
             connectionType,
             lastSyncDate)
         );
+    }
+
+    public void RemoveTrackingDevice(TrackingDeviceId trackingDeviceId)
+    {
+        var trackingDevice = _trackingDevices.FirstOrDefault(t => t.Id == trackingDeviceId);
+        if (trackingDevice is null)
+        {
+            return;
+        }
+        _trackingDevices.Remove(trackingDevice);
     }
 }

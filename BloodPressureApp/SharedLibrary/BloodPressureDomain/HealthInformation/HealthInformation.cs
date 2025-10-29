@@ -75,6 +75,16 @@ public class HealthInformation
             endDate)
         );
     }
+
+    public void RemoveMedication(MedicationId medicationId)
+    {
+        var medication = _medications.FirstOrDefault(m => m.Id == medicationId);
+        if (medication is null)
+        {
+            return;
+        }
+        _medications.Remove(medication);
+    }
 }
 
 public enum Sex
