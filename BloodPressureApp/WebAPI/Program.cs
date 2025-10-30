@@ -21,7 +21,7 @@ builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 // Add services to the container.
-builder.Services.AddSharedDataSource();
+builder.Services.AddSharedDataSource(builder.Configuration);
 builder.Services.AddServicesByAttribute();
 
 builder.Services.AddControllers();

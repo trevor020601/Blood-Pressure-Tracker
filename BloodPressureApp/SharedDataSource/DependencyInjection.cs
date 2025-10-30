@@ -7,11 +7,12 @@ namespace SharedDataSource;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddSharedDataSource(this IServiceCollection services)
+    public static IServiceCollection AddSharedDataSource(this IServiceCollection services,
+                                                         IConfiguration configuration)
     {
-        //services.AddDbContext<ApplicationDbContext>(options =>
-        //    options.UseSqlServer("")
-        //);
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString(""))
+        );
 
         services.AddServicesByAttribute();
 
