@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using SharedDataSource;
 using SharedLibrary.Extensions;
 using SharedLibrary.Middleware.Exceptions;
@@ -51,6 +55,30 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource.AddService("BloodPressureApp"))
+    .WithMetrics(metrics =>
+    {
+        metrics
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddOtlpExporter();
+    })
+    .WithTracing(tracing =>
+    {
+        tracing
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddEntityFrameworkCoreInstrumentation()
+            //.AddSqlClientInstrumentation() Not sure if I need this or not...
+            .AddOtlpExporter();
+    });
+
+builder.Logging.AddOpenTelemetry(logging =>
+{
+    logging.AddOtlpExporter();
+});
 
 var app = builder.Build();
 
