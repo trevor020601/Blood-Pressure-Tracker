@@ -7,10 +7,13 @@
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<!--Enable to suppress warnings for missing XML comments-->
 	<NoWarn>$(NoWarn);1591</NoWarn>
+	<UserSecretsId>d36a74f2-f93b-45b2-ab33-e69cd8aeac5b</UserSecretsId>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
