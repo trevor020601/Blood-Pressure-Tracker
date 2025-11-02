@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BloodPressureApp.ServiceDefaults\BloodPressureApp.ServiceDefaults.csproj" />
     <ProjectReference Include="..\SharedDataSource\SharedDataSource.csproj" />
     <ProjectReference Include="..\SharedLibrary\SharedLibrary.csproj" />
   </ItemGroup>

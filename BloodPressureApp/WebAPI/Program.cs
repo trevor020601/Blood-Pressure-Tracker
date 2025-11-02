@@ -12,6 +12,8 @@ using WebAPI.OptionsSetup;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddProblemDetails(configure =>
 {
     // TODO: Look into more problem details configurations
@@ -81,6 +83,8 @@ builder.Logging.AddOpenTelemetry(logging =>
 });
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
