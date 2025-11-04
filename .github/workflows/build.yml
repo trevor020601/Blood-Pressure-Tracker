@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - [ "master", "main" ] 
 
 env:
   DOTNET_VERSION: "9.x"
