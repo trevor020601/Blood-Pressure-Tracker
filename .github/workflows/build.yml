@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     defaults:
       run:
@@ -25,9 +25,8 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Apparently only Android is supported on Ubuntu
-      - name: Install MAUI (Android)
-        run: dotnet workload install maui-android
+      - name: Workload Resotore
+        run: dotnet workload restore
 
       - name: Restore
         run: dotnet restore BloodPressureApp.sln
