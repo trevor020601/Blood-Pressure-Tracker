@@ -25,8 +25,8 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Workload Restore
-        run: dotnet Workload restore BloodPressureApp.sln
+      - name: Install MAUI
+        run: dotnet workload install maui
 
       - name: Restore
         run: dotnet restore BloodPressureApp.sln
