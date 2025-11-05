@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     defaults:
       run:
@@ -25,11 +25,11 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Workload Resotore
+      - name: Workload Restore
         run: dotnet workload restore
 
       - name: Restore
-        run: dotnet restore --runtime win-x64 BloodPressureApp.sln
+        run: dotnet restore BloodPressureApp.sln
 
       # TODO: Action for checking vulnerable/out-of-date packages
 
