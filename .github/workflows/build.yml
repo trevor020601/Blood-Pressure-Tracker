@@ -29,7 +29,7 @@ jobs:
         run: dotnet workload restore
 
       - name: Restore
-        run: dotnet restore BloodPressureApp.sln
+        run: dotnet restore --runtime win-x64 BloodPressureApp.sln
 
       # TODO: Action for checking vulnerable/out-of-date packages
 
