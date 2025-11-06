@@ -7,6 +7,11 @@ using System.Text;
 
 namespace SharedLibrary.Authentication;
 
+public interface IJwtProvider
+{
+    string Generate(User user);
+}
+
 internal sealed class JwtProvider : IJwtProvider
 {
     private readonly JwtOptions _options;

@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedDataSource.Converters;
 using SharedLibrary.BloodPressureDomain.HealthInformation;
 using SharedLibrary.BloodPressureDomain.Patient;
+using SharedLibrary.DataAccess.Converters;
 
-namespace SharedDataSource.Configurations;
+namespace SharedLibrary.DataAccess.Configurations;
 
 internal class HealthInformationConfiguration : IEntityTypeConfiguration<HealthInformation>
 {

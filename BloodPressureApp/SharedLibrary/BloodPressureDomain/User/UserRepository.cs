@@ -1,13 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SharedLibrary.BloodPressureDomain.User;
+using Microsoft.Extensions.DependencyInjection;
+using SharedLibrary.Attributes;
+using SharedLibrary.DataAccess;
 
-namespace SharedDataSource.Repositories;
+namespace SharedLibrary.BloodPressureDomain.User;
+
+[InjectDependency(ServiceLifetime.Scoped)]
+public interface IUserRepository
+{
+    Task<User?> GetByIdAsync(UserId id);
+    Task<User?> GetByEmail(string email);
+    Task<bool> Exists(string email);
+}
 
 public sealed class UserRepository : IUserRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IApplicationDbContext _context;
 
-    public UserRepository(ApplicationDbContext context)
+    public UserRepository(IApplicationDbContext context)
     {
         _context = context;
     }

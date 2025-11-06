@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibrary", "SharedLibr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{9CF47860-2CEA-F379-09D8-9AEF27965D12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedDataSource", "SharedDataSource\SharedDataSource.csproj", "{83039069-3749-4C6F-AA41-CF69BEDAE4AD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BloodPressureApp.AppHost", "BloodPressureApp.AppHost\BloodPressureApp.AppHost.csproj", "{EB8BD3D8-168E-47D6-9629-AB4FCC375A14}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BloodPressureApp.ServiceDefaults", "BloodPressureApp.ServiceDefaults\BloodPressureApp.ServiceDefaults.csproj", "{0B235EEC-4664-435D-127F-47361C8E00A8}"
@@ -33,10 +31,6 @@ Global
 		{9CF47860-2CEA-F379-09D8-9AEF27965D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CF47860-2CEA-F379-09D8-9AEF27965D12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CF47860-2CEA-F379-09D8-9AEF27965D12}.Release|Any CPU.Build.0 = Release|Any CPU
-		{83039069-3749-4C6F-AA41-CF69BEDAE4AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83039069-3749-4C6F-AA41-CF69BEDAE4AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83039069-3749-4C6F-AA41-CF69BEDAE4AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83039069-3749-4C6F-AA41-CF69BEDAE4AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB8BD3D8-168E-47D6-9629-AB4FCC375A14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB8BD3D8-168E-47D6-9629-AB4FCC375A14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB8BD3D8-168E-47D6-9629-AB4FCC375A14}.Release|Any CPU.ActiveCfg = Release|Any CPU

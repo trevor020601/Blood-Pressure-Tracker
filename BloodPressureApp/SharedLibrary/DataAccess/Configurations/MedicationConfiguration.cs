@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedDataSource.Converters;
 using SharedLibrary.BloodPressureDomain.Medication;
+using SharedLibrary.DataAccess.Converters;
 
-namespace SharedDataSource.Configurations;
+namespace SharedLibrary.DataAccess.Configurations;
 
 internal class MedicationConfiguration : IEntityTypeConfiguration<Medication>
 {

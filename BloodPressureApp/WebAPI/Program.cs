@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using SharedDataSource;
+using SharedLibrary.DataAccess;
 using SharedLibrary.Extensions;
 using SharedLibrary.Middleware.Exceptions;
 using System.Reflection;
@@ -27,7 +28,11 @@ builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 // Add services to the container.
-builder.Services.AddSharedDataSource(builder.Configuration);
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("")); // Should probably be a secret
+});
+
 builder.Services.AddServicesByAttribute();
 
 builder.Services.AddControllers();

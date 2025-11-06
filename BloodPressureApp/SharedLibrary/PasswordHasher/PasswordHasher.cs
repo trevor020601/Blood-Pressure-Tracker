@@ -1,6 +1,16 @@
-﻿using System.Security.Cryptography;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SharedLibrary.Attributes;
+using System.Security.Cryptography;
 
 namespace SharedLibrary.PasswordHasher;
+
+[InjectDependency(ServiceLifetime.Singleton)]
+public interface IPasswordHasher
+{
+    string Hash(string password);
+
+    bool Verify(string password, string passwordHash);
+}
 
 // TODO: Accomodate for if SaltSize, HashSize, Iterations, or Algorithm ever needs to change
 //       This would have to be included in password hash stored in database to slowly phase out old approach
