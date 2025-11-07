@@ -28,28 +28,28 @@ public sealed class UserRepository : IUserRepository
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<User?> GetByIdAsync(UserId id, 
+    public async Task<User?> GetByIdAsync(UserId id,
                                           CancellationToken cancellationToken)
     {
         return await _context.Users
             .AsNoTracking()
-            .SingleOrDefaultAsync(u => u.Id == id);
+            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
     }
 
-    public async Task<User?> GetByEmail(string email, 
+    public async Task<User?> GetByEmail(string email,
                                         CancellationToken cancellationToken)
     {
         return await _context.Users
             .AsNoTracking()
-            .SingleOrDefaultAsync(u => u.Email.Value == email);
+            .SingleOrDefaultAsync(u => u.Email.Value == email, cancellationToken);
     }
 
-    public async Task<bool> Exists(string email, 
+    public async Task<bool> Exists(string email,
                                    CancellationToken cancellationToken)
     {
         return await _context.Users
             .AsNoTracking()
-            .AnyAsync(u => u.Email.Value == email);
+            .AnyAsync(u => u.Email.Value == email, cancellationToken);
     }
 
     public async Task Create(Email email,
@@ -67,5 +67,30 @@ public sealed class UserRepository : IUserRepository
         await _context.Users.AddAsync(user, cancellationToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Maybe return a result?
     }
+
+    public async Task Delete(Email email,
+                             CancellationToken cancellationToken)
+    {
+        var doesUserExist = await Exists(email.Value, cancellationToken);
+        if (!doesUserExist)
+        {
+            return;
+        }
+
+        await _context.Users.Where(u => u.Email == email)
+                            .ExecuteDeleteAsync(cancellationToken);
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Maybe return a result?
+    }
+
+    // Update email
+
+    // Update password
+
+    // Maybe update account status but only under admin privileges...
 }
