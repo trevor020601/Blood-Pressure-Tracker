@@ -7,7 +7,7 @@ namespace SharedLibrary.BloodPressureDomain.User;
 [InjectDependency(ServiceLifetime.Scoped)]
 public interface ILoginUser
 {
-    Task<User> Handle(LoginUser.Request request);
+    Task<User> Handle(LoginUser.Request request, CancellationToken cancellationToken);
 }
 
 public sealed class LoginUser : ILoginUser
@@ -24,9 +24,10 @@ public sealed class LoginUser : ILoginUser
 
     public record Request(string Email, string Password);
 
-    public async Task<User> Handle(Request request)
+    public async Task<User> Handle(Request request, 
+                                   CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmail(request.Email) ?? throw new UserNotFoundException("The user was not found");
+        var user = await _userRepository.GetByEmail(request.Email, cancellationToken) ?? throw new UserNotFoundException("The user was not found");
         var verified = _passwordHasher.Verify(request.Password, user.Password);
         if (!verified)
         {

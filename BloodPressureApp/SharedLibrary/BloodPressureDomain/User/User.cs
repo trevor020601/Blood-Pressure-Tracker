@@ -4,6 +4,8 @@ namespace SharedLibrary.BloodPressureDomain.User;
 
 public class User
 {
+    public User () { }
+
     public UserId Id { get; private set; } = default!;
 
     public Email Email { get; private set; } = default!;
@@ -19,6 +21,17 @@ public class User
 
     // Not sure if I want to do this yet, but create an object for account preferences (like notifications, measurement units, etc.)
     //public AccountPreferences Preferences { get; private set; }
+
+    public static User Create(Email email,
+                              string password)
+    {
+        return new User {
+            Id = new UserId(Guid.CreateVersion7()),
+            Email = email,
+            Password = password,
+            Status = AccountStatus.Active 
+        };
+    }
 }
 
 public enum AccountStatus

@@ -20,6 +20,7 @@ public class UserController : ControllerBase
     /// Finds a registered user and logs them in if found
     /// </summary>
     /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <remarks>
     /// Sample request:
@@ -38,9 +39,9 @@ public class UserController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> LoginAsync(LoginUser.Request request)
+    public async Task<IActionResult> LoginAsync(LoginUser.Request request, CancellationToken cancellationToken)
     {
-        var user = await _loginUser.Handle(request);
+        var user = await _loginUser.Handle(request, cancellationToken);
         if (user is null)
         {
             return NotFound();
