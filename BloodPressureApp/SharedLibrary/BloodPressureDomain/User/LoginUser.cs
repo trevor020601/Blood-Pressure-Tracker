@@ -4,6 +4,8 @@ using SharedLibrary.PasswordHasher;
 
 namespace SharedLibrary.BloodPressureDomain.User;
 
+// TODO: Refactor this once I start doing a concrete CQRS implementation...
+
 [InjectDependency(ServiceLifetime.Scoped)]
 public interface ILoginUser
 {
@@ -37,7 +39,7 @@ public sealed class LoginUser : ILoginUser
     }
 }
 
-// TODO: Move custom exceptions to separate directory?
+// TODO: Move custom exceptions to separate directory? Refactor to use result pattern instead?
 
 [Serializable]
 public sealed class UserNotFoundException : Exception

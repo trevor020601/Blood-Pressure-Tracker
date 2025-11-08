@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
 using SharedLibrary.DataAccess;
+using SharedLibrary.Result;
 using SharedLibrary.UnitOfWork;
+using System.Diagnostics;
 
 namespace SharedLibrary.BloodPressureDomain.User;
 
@@ -13,7 +15,8 @@ public interface IUserRepository
     Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken);
     Task<User?> GetByEmail(string email, CancellationToken cancellationToken);
     Task<bool> Exists(string email, CancellationToken cancellationToken);
-    Task Create(Email email, string password, CancellationToken cancellationToken);
+    Task<Result.Result> Create(Email email, string password, CancellationToken cancellationToken);
+    Task<Result.Result> Delete(Email email, CancellationToken cancellationToken);
 }
 
 public sealed class UserRepository : IUserRepository
@@ -52,14 +55,14 @@ public sealed class UserRepository : IUserRepository
             .AnyAsync(u => u.Email.Value == email, cancellationToken);
     }
 
-    public async Task Create(Email email,
+    public async Task<Result.Result> Create(Email email,
                              string password,
                              CancellationToken cancellationToken)
     {
         var doesUserExist = await Exists(email.Value, cancellationToken);
         if (doesUserExist)
         {
-            throw new InvalidOperationException("User with email already exists.");
+            return UserErrors.ExistingUser;
         }
 
         var user = User.Create(email, password);
@@ -68,16 +71,17 @@ public sealed class UserRepository : IUserRepository
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        // Maybe return a result?
+        return Result.Result.Success();
     }
 
-    public async Task Delete(Email email,
-                             CancellationToken cancellationToken)
+    public async Task<Result.Result> Delete(Email email,
+                                            CancellationToken cancellationToken)
     {
         var doesUserExist = await Exists(email.Value, cancellationToken);
         if (!doesUserExist)
         {
-            return;
+            // Should this be a custom Error?
+            return Result.Result.Success();
         }
 
         await _context.Users.Where(u => u.Email == email)
@@ -85,7 +89,7 @@ public sealed class UserRepository : IUserRepository
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        // Maybe return a result?
+        return Result.Result.Success();
     }
 
     // Update email
@@ -93,4 +97,9 @@ public sealed class UserRepository : IUserRepository
     // Update password
 
     // Maybe update account status but only under admin privileges...
+}
+
+public static class UserErrors
+{
+    public static readonly Error ExistingUser = new("Users.Create", "User with email already exists.", new StackTrace().ToString());
 }
