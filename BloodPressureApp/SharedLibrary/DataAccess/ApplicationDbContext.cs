@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
 using SharedLibrary.BloodPressureDomain.BloodPressureReading;
@@ -25,6 +26,9 @@ public interface IApplicationDbContext
     public DbSet<Medication> Medications { get; set; }
 
     public DbSet<TrackingDevice> TrackingDevices { get; set; }
+
+    // This abstraction is needed for UnitOfWork implementation... get rid of unit of work?
+    public ChangeTracker ChangeTracker { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

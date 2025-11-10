@@ -1,8 +1,9 @@
 ﻿using SharedLibrary.BloodPressureDomain.ValueObjects;
+using SharedLibrary.Events;
 
 namespace SharedLibrary.BloodPressureDomain.User;
 
-public class User
+public class User : Entity
 {
     public User () { }
 

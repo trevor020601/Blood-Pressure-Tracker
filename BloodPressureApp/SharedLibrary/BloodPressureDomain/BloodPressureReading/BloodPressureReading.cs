@@ -1,8 +1,9 @@
 ﻿using SharedLibrary.BloodPressureDomain.TrackingDevice;
+using SharedLibrary.Events;
 
 namespace SharedLibrary.BloodPressureDomain.BloodPressureReading;
 
-public class BloodPressureReading
+public class BloodPressureReading : Entity
 {
     internal BloodPressureReading(BloodPressureReadingId id,
                                   TrackingDeviceId trackingDeviceId,

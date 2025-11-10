@@ -1,6 +1,8 @@
-﻿namespace SharedLibrary.BloodPressureDomain.Medication;
+﻿using SharedLibrary.Events;
 
-public class Medication
+namespace SharedLibrary.BloodPressureDomain.Medication;
+
+public class Medication : Entity
 {
     internal Medication(MedicationId id,
                         string name, 

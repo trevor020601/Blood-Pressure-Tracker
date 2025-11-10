@@ -2,10 +2,11 @@
 using SharedLibrary.BloodPressureDomain.HealthInformation;
 using SharedLibrary.BloodPressureDomain.TrackingDevice;
 using SharedLibrary.BloodPressureDomain.User;
+using SharedLibrary.Events;
 
 namespace SharedLibrary.BloodPressureDomain.Patient;
 
-public class Patient
+public class Patient : Entity
 {
     private readonly HashSet<BloodPressureReading.BloodPressureReading> _bloodPressureReadings = [];
 

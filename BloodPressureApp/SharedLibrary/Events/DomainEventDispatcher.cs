@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SharedLibrary.Attributes;
 using System.Collections.Concurrent;
 
 namespace SharedLibrary.Events;
 
+[InjectDependency(ServiceLifetime.Transient)]
 public interface IDomainEventsDispatcher
 {
     Task DispatchAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default);

@@ -1,10 +1,11 @@
 ﻿using SharedLibrary.BloodPressureDomain.Medication;
 using SharedLibrary.BloodPressureDomain.Patient;
+using SharedLibrary.Events;
 using SharedLibrary.Extensions;
 
 namespace SharedLibrary.BloodPressureDomain.HealthInformation;
 
-public class HealthInformation
+public class HealthInformation : Entity
 {
     private readonly HashSet<Medication.Medication> _medications = [];
 

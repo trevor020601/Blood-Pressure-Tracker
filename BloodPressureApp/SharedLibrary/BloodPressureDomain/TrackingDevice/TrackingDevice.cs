@@ -1,8 +1,10 @@
-﻿namespace SharedLibrary.BloodPressureDomain.TrackingDevice;
+﻿using SharedLibrary.Events;
+
+namespace SharedLibrary.BloodPressureDomain.TrackingDevice;
 
 // Questionable if I even want this domain...
 
-public class TrackingDevice
+public class TrackingDevice : Entity
 {
     internal TrackingDevice(TrackingDeviceId id,
                             string manufacturer, 

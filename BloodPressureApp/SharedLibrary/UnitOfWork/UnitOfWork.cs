@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
 using SharedLibrary.DataAccess;
+using SharedLibrary.Events;
 
 namespace SharedLibrary.UnitOfWork;
 
@@ -10,17 +11,29 @@ public interface IUnitOfWork
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
 
-internal sealed class UnitOfWork : IUnitOfWork
+internal sealed class UnitOfWork(IApplicationDbContext dbContext, IDomainEventsDispatcher domainEventsDispatcher) : IUnitOfWork 
 {
-    private readonly IApplicationDbContext _dbContext;
-
-    public UnitOfWork(IApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await _dbContext.SaveChangesAsync(cancellationToken);
+        var result = await dbContext.SaveChangesAsync(cancellationToken);
+
+        await PublishDomainEventsAsync();
+
+        return result;
+    }
+
+    private async Task PublishDomainEventsAsync()
+    {
+        var domainEvents = 
+            dbContext.ChangeTracker.Entries<Entity>()
+                         .Select(entry => entry.Entity)
+                         .SelectMany(entity =>
+                         {
+                            var domainEvents = entity.DomainEvents;
+                            entity.ClearDomainEvents();
+                            return domainEvents;
+                         }).ToList();
+
+        await domainEventsDispatcher.DispatchAsync(domainEvents);
     }
 }
