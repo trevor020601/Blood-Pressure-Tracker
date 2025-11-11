@@ -29,7 +29,7 @@ public sealed class LoginUser : ILoginUser
     public async Task<User> Handle(Request request, 
                                    CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmail(request.Email, cancellationToken) ?? throw new UserNotFoundException("The user was not found");
+        var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken) ?? throw new UserNotFoundException("The user was not found");
         var verified = _passwordHasher.Verify(request.Password, user.Password);
         if (!verified)
         {
