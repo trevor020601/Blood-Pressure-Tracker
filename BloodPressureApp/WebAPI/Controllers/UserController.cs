@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.BloodPressureDomain.User;
+using SharedLibrary.BloodPressureDomain.User.UserLogin;
+using SharedLibrary.BloodPressureDomain.User.UserRegister;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
 using SharedLibrary.Messaging;
 
@@ -7,7 +9,7 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserController(ILoginUser loginUser) : ControllerBase
+public class UserController : ControllerBase
 {
     // Test this out and revise...
     [HttpPost]
@@ -18,7 +20,7 @@ public class UserController(ILoginUser loginUser) : ControllerBase
                                                    CancellationToken cancellationToken)
     {
         var command = new UserRegisterCommand(Email.Create(email), password);
-        var result = await handler.Handle(command, cancellationToken);
+        var result = await handler.HandleAsync(command, cancellationToken);
         return Ok(result);
     }
 
@@ -27,7 +29,9 @@ public class UserController(ILoginUser loginUser) : ControllerBase
     /// <summary>
     /// Finds a registered user and logs them in if found
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <param name="handler"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <remarks>
@@ -47,13 +51,13 @@ public class UserController(ILoginUser loginUser) : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> LoginAsync(LoginUser.Request request, CancellationToken cancellationToken)
+    public async Task<IActionResult> LoginAsync(string email,
+                                                string password,
+                                                ICommandHandler<UserLoginCommand, UserId> handler,
+                                                CancellationToken cancellationToken)
     {
-        var user = await loginUser.Handle(request, cancellationToken);
-        if (user is null)
-        {
-            return NotFound();
-        }
-        return Ok();
+        var command = new UserLoginCommand(Email.Create(email), password);
+        var result = await handler.HandleAsync(command, cancellationToken);
+        return Ok(result);
     }
 }

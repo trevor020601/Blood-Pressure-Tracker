@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
+using SharedLibrary.BloodPressureDomain.User.UserLogin;
+using SharedLibrary.BloodPressureDomain.User.UserRegister;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
 using SharedLibrary.DataAccess;
 using SharedLibrary.PasswordHasher;
@@ -12,10 +14,10 @@ namespace SharedLibrary.BloodPressureDomain.User;
 [InjectDependency(ServiceLifetime.Scoped)]
 public interface IUserRepository
 {
-    Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken);
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<bool> ExistsAsync(string email, CancellationToken cancellationToken);
     Task<Result<UserId>> CreateAsync(Email email, string password, CancellationToken cancellationToken);
+    Task<Result<UserId>> RetrieveAsync(Email email, string password, CancellationToken cancellationToken);
     Task<Result.Result> DeleteAsync(Email email, CancellationToken cancellationToken);
 }
 
@@ -23,14 +25,6 @@ public sealed class UserRepository(IApplicationDbContext context,
                                    IUnitOfWork unitOfWork,
                                    IPasswordHasher passwordHasher) : IUserRepository
 {
-    public async Task<User?> GetByIdAsync(UserId id,
-                                          CancellationToken cancellationToken)
-    {
-        return await context.Users
-            .AsNoTracking()
-            .SingleOrDefaultAsync(u => u.Id == id, cancellationToken);
-    }
-
     public async Task<User?> GetByEmailAsync(string email,
                                              CancellationToken cancellationToken)
     {
@@ -68,18 +62,40 @@ public sealed class UserRepository(IApplicationDbContext context,
         return Result.Result.Success(user.Id);
     }
 
-    public async Task<Result.Result> DeleteAsync(Email email,
-                                            CancellationToken cancellationToken)
+    public async Task<Result<UserId>> RetrieveAsync(Email email,
+                                                    string password,
+                                                    CancellationToken cancellationToken)
     {
-        var doesUserExist = await ExistsAsync(email.Value, cancellationToken);
-        if (!doesUserExist)
+        var user = await GetByEmailAsync(email.Value, cancellationToken);
+        if (user is null)
         {
-            // Should this be a custom Error?
-            return Result.Result.Success();
+            return Result.Result.Failure<UserId>(UserErrors.UserDoesNotExist);
         }
 
-        await context.Users.Where(u => u.Email == email)
-                            .ExecuteDeleteAsync(cancellationToken);
+        var verified = passwordHasher.Verify(password, user.Password);
+        if (!verified)
+        {
+            return Result.Result.Failure<UserId>(UserErrors.IncorrectPassword);
+        }
+
+        user.Raise(new UserLoginDomainEvent(user.Id));
+
+        // Might need to decouple the domain events dispatcher from unit of work...
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Result.Result.Success(user.Id);
+    }
+
+    public async Task<Result.Result> DeleteAsync(Email email,
+                                                 CancellationToken cancellationToken)
+    {
+        var user = await GetByEmailAsync(email.Value, cancellationToken);
+        if (user is null)
+        {
+            return Result.Result.Failure(UserErrors.UserDoesNotExist);
+        }
+
+        context.Users.Remove(user);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
