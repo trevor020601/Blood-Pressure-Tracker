@@ -34,6 +34,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddServicesByAttribute();
+builder.Services.AddHandlers();
 
 builder.Services.AddControllers();
 

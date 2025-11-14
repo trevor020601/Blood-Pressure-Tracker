@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
+using SharedLibrary.Messaging;
 using System.Reflection;
 
 namespace SharedLibrary.Extensions;
@@ -47,5 +48,17 @@ public static class ServiceCollectionExtensions
         }
 
         return services;
+    }
+
+    public static IServiceCollection AddHandlers(this IServiceCollection services)
+    {
+        return services.Scan(scan => scan.FromAssembliesOf(typeof(ServiceCollectionExtensions))
+                                                         .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), false)
+                                                         .AsImplementedInterfaces()
+                                                         .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), false)
+                                                         .AsImplementedInterfaces()
+                                                         .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), false)
+                                                         .AsImplementedInterfaces()
+                                                         .WithScopedLifetime());
     }
 }
