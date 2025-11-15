@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
+using SharedLibrary.Decorators;
 using SharedLibrary.Messaging;
 using System.Reflection;
 
@@ -52,13 +53,25 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddHandlers(this IServiceCollection services)
     {
-        return services.Scan(scan => scan.FromAssembliesOf(typeof(ServiceCollectionExtensions))
-                                                         .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), false)
-                                                         .AsImplementedInterfaces()
-                                                         .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), false)
-                                                         .AsImplementedInterfaces()
-                                                         .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), false)
-                                                         .AsImplementedInterfaces()
-                                                         .WithScopedLifetime());
+        services.Scan(scan => scan.FromAssembliesOf(typeof(ServiceCollectionExtensions))
+                                                  .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), false)
+                                                  .AsImplementedInterfaces()
+                                                  .WithScopedLifetime());
+
+        services.Scan(scan => scan.FromAssembliesOf(typeof(ServiceCollectionExtensions))
+                                                  .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), false)
+                                                  .AsImplementedInterfaces()
+                                                  .WithScopedLifetime());
+
+        services.Scan(scan => scan.FromAssembliesOf(typeof(ServiceCollectionExtensions))
+                                                  .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), false)
+                                                  .AsImplementedInterfaces()
+                                                  .WithScopedLifetime());
+
+        services.Decorate(typeof(IQueryHandler<,>), typeof(LoggingDecorator.QueryHandler<,>));
+        services.Decorate(typeof(ICommandHandler<>), typeof(LoggingDecorator.CommandBaseHandler<>));
+        services.Decorate(typeof(ICommandHandler<,>), typeof(LoggingDecorator.CommandHandler<,>));
+
+        return services;
     }
 }
