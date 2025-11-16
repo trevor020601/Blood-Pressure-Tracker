@@ -5,6 +5,7 @@ using SharedLibrary.BloodPressureDomain.User.UserLogin;
 using SharedLibrary.BloodPressureDomain.User.UserRegister;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
 using SharedLibrary.DataAccess;
+using SharedLibrary.Events;
 using SharedLibrary.PasswordHasher;
 using SharedLibrary.Result;
 using SharedLibrary.UnitOfWork;
@@ -23,7 +24,8 @@ public interface IUserRepository
 
 public sealed class UserRepository(IApplicationDbContext context,
                                    IUnitOfWork unitOfWork,
-                                   IPasswordHasher passwordHasher) : IUserRepository
+                                   IPasswordHasher passwordHasher,
+                                   IDomainEventsPublisher domainEventsPublisher) : IUserRepository
 {
     public async Task<User?> GetByEmailAsync(string email,
                                              CancellationToken cancellationToken)
@@ -59,6 +61,8 @@ public sealed class UserRepository(IApplicationDbContext context,
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await domainEventsPublisher.PublishDomainEventsAsync();
+
         return Result.Result.Success(user.Id);
     }
 
@@ -80,8 +84,7 @@ public sealed class UserRepository(IApplicationDbContext context,
 
         user.Raise(new UserLoginDomainEvent(user.Id));
 
-        // Might need to decouple the domain events dispatcher from unit of work...
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+        await domainEventsPublisher.PublishDomainEventsAsync();
 
         return Result.Result.Success(user.Id);
     }
@@ -98,6 +101,8 @@ public sealed class UserRepository(IApplicationDbContext context,
         context.Users.Remove(user);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // TODO: Create UserDeleteEvent
 
         return Result.Result.Success();
     }
