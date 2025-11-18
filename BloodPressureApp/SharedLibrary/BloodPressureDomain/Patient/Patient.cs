@@ -3,10 +3,11 @@ using SharedLibrary.BloodPressureDomain.HealthInformation;
 using SharedLibrary.BloodPressureDomain.TrackingDevice;
 using SharedLibrary.BloodPressureDomain.User;
 using SharedLibrary.Events;
+using SharedLibrary.Primitives;
 
 namespace SharedLibrary.BloodPressureDomain.Patient;
 
-public class Patient : Entity
+public class Patient : Entity, IAuditableEntity
 {
     private readonly HashSet<BloodPressureReading.BloodPressureReading> _bloodPressureReadings = [];
 
@@ -23,6 +24,10 @@ public class Patient : Entity
     public IReadOnlyList<BloodPressureReading.BloodPressureReading> BloodPressureReadings => [.. _bloodPressureReadings];
 
     public IReadOnlyList<TrackingDevice.TrackingDevice> TrackingDevices => [.. _trackingDevices];
+
+    public DateTime CreatedOn { get; set; }
+
+    public DateTime? ModifiedOn { get; set; }
 
     public static Patient Create(User.User user, 
                                  HealthInformation.HealthInformation healthInformation)

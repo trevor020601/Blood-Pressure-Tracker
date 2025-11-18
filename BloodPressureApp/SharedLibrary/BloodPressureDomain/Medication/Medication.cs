@@ -1,8 +1,9 @@
 ﻿using SharedLibrary.Events;
+using SharedLibrary.Primitives;
 
 namespace SharedLibrary.BloodPressureDomain.Medication;
 
-public class Medication : Entity
+public class Medication : Entity, IAuditableEntity
 {
     internal Medication(MedicationId id,
                         string name, 
@@ -29,6 +30,10 @@ public class Medication : Entity
     public DateTime StartDate { get; private set; }
 
     public DateTime? EndDate { get; private set; }
+
+    public DateTime CreatedOn { get; set; }
+
+    public DateTime? ModifiedOn { get; set; }
 
     // More properties?
 }

@@ -1,10 +1,11 @@
 ﻿using SharedLibrary.Events;
+using SharedLibrary.Primitives;
 
 namespace SharedLibrary.BloodPressureDomain.TrackingDevice;
 
 // Questionable if I even want this domain...
 
-public class TrackingDevice : Entity
+public class TrackingDevice : Entity, IAuditableEntity
 {
     internal TrackingDevice(TrackingDeviceId id,
                             string manufacturer, 
@@ -32,6 +33,10 @@ public class TrackingDevice : Entity
     public ConnectionType ConnectionType { get; private set; }
 
     public DateTime LastSyncDate { get; private set; }
+
+    public DateTime CreatedOn { get; set; }
+
+    public DateTime? ModifiedOn { get; set; }
 }
 
 public enum ConnectionType

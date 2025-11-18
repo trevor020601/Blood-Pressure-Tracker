@@ -6,6 +6,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using SharedLibrary.DataAccess;
+using SharedLibrary.DataAccess.Interceptors;
 using SharedLibrary.Extensions;
 using SharedLibrary.Middleware.Exceptions;
 using System.Reflection;
@@ -27,10 +28,15 @@ builder.Services.AddProblemDetails(configure =>
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+builder.Services.AddSingleton<UpdateAuditableEntitiesInterceptor>();
+
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("")); // Should probably be a secret
+    var auditableInterceptor = sp.GetService<UpdateAuditableEntitiesInterceptor>()!;
+
+    options.UseSqlServer(builder.Configuration.GetConnectionString("")) // Should probably be a secret
+           .AddInterceptors(auditableInterceptor);
 });
 
 builder.Services.AddServicesByAttribute();

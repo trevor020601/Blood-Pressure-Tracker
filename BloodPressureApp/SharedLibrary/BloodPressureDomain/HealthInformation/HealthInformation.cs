@@ -2,10 +2,11 @@
 using SharedLibrary.BloodPressureDomain.Patient;
 using SharedLibrary.Events;
 using SharedLibrary.Extensions;
+using SharedLibrary.Primitives;
 
 namespace SharedLibrary.BloodPressureDomain.HealthInformation;
 
-public class HealthInformation : Entity
+public class HealthInformation : Entity, IAuditableEntity
 {
     private readonly HashSet<Medication.Medication> _medications = [];
 
@@ -41,6 +42,10 @@ public class HealthInformation : Entity
     // Blood type?
 
     public IReadOnlyList<Medication.Medication> Medications => [.. _medications];
+
+    public DateTime CreatedOn { get; set; }
+
+    public DateTime? ModifiedOn { get; set; }
 
     public static HealthInformation Create(Patient.Patient patient,
                                            string firstName,

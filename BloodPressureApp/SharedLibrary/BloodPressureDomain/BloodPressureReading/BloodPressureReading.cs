@@ -1,9 +1,10 @@
 ﻿using SharedLibrary.BloodPressureDomain.TrackingDevice;
 using SharedLibrary.Events;
+using SharedLibrary.Primitives;
 
 namespace SharedLibrary.BloodPressureDomain.BloodPressureReading;
 
-public class BloodPressureReading : Entity
+public class BloodPressureReading : Entity, IAuditableEntity
 {
     internal BloodPressureReading(BloodPressureReadingId id,
                                   TrackingDeviceId trackingDeviceId,
@@ -47,6 +48,10 @@ public class BloodPressureReading : Entity
     public Source MeasurementSource { get; private set; }
 
     public Position? Position { get; private set; }
+
+    public DateTime CreatedOn { get; set; }
+
+    public DateTime? ModifiedOn { get; set; }
 }
 
 public enum Source
