@@ -6,27 +6,22 @@ using System.Text;
 
 namespace WebAPI.OptionsSetup;
 
-public class JwtBearerOptionsSetup : IConfigureOptions<JwtBearerOptions>
+public class JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions) : IConfigureOptions<JwtBearerOptions>
 {
-    private readonly JwtOptions _jwtOptions;
-
-    public JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions)
-    {
-        _jwtOptions = jwtOptions.Value;
-    }
-
     public void Configure(JwtBearerOptions options)
     {
+        options.RequireHttpsMetadata = false;
         options.TokenValidationParameters = new()
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = _jwtOptions.Issuer,
-            ValidAudience = _jwtOptions.Audience,
+            ValidIssuer = jwtOptions.Value.Issuer,
+            ValidAudience = jwtOptions.Value.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_jwtOptions.SecretKey))
+                Encoding.UTF8.GetBytes(jwtOptions.Value.SecretKey)),
+            ClockSkew = TimeSpan.Zero
         };
     }
 }

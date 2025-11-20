@@ -1,52 +1,43 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using SharedLibrary.Attributes;
 using SharedLibrary.BloodPressureDomain.User;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace SharedLibrary.Authentication;
 
+[InjectDependency(ServiceLifetime.Singleton)]
 public interface IJwtProvider
 {
     string Generate(User user);
 }
 
-internal sealed class JwtProvider : IJwtProvider
+internal sealed class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
 {
-    private readonly JwtOptions _options;
-
-    public JwtProvider(IOptions<JwtOptions> options)
-    {
-        _options = options.Value;
-    }
-
     public string Generate(User user)
     {
-        var claims = new Claim[] {
-            new(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email.Value)
+        var secretKey = options.Value.SecretKey;
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity([
+                new(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
+                new(JwtRegisteredClaimNames.Email, user.Email.Value)
+            ]),
+            Expires = DateTime.Now.AddMinutes(options.Value.ExpirationInMinutes),
+            SigningCredentials = credentials,
+            Issuer = options.Value.Issuer,
+            Audience = options.Value.Audience
         };
 
-        var signingCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(_options.SecretKey)
-                ),
-                SecurityAlgorithms.HmacSha256
-        );
+        var handler = new JsonWebTokenHandler();
 
-        var token = new JwtSecurityToken(
-            _options.Issuer, 
-            _options.Audience, 
-            claims, 
-            null, 
-            DateTime.UtcNow.AddHours(1), 
-            signingCredentials
-        );
-
-        var tokenValue = new JwtSecurityTokenHandler()
-            .WriteToken(token);
-
-        return tokenValue;
+        return handler.CreateToken(tokenDescriptor);
     }
 }

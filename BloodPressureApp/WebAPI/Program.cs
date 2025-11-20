@@ -35,7 +35,7 @@ builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
 {
     var auditableInterceptor = sp.GetService<UpdateAuditableEntitiesInterceptor>()!;
 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("")) // Should probably be a secret
+    options.UseSqlServer(builder.Configuration.GetConnectionString("")) // Should probably be a secret or continue use of options pattern
            .AddInterceptors(auditableInterceptor);
 });
 
@@ -59,11 +59,65 @@ builder.Services.AddSwaggerGen(options =>
 
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+    options.CustomSchemaIds(id => id.FullName!.Replace('+', '-'));
+
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "JWT Authentication",
+        Description = "Enter your JWT token in this field",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        BearerFormat = "JWT"
+    };
+
+    options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
+
+    // Something is out of date here, figure out how to fix it...
+    //var securityRequirement = new OpenApiSecurityRequirement
+    //{
+    //    new OpenApiSecurityScheme
+    //    {
+    //        Reference = new OpenApiReference {
+    //            Type = ReferenceType.SecurityScheme,
+    //            Id = JwtBearerDefaults.AuthenticationScheme
+    //        }
+    //    },
+    //    []
+    //};
+
+    //options.AddSecurityRequirement(securityRequirement);
+
+    //var openapiDocument = new OpenApiDocument
+    //{
+    //    Security = [new OpenApiSecurityRequirement
+    //    {
+    //     new OpenApiSecurityScheme {
+
+    //     }
+    //    }]
+    //};
+
+    //var securityRequirement = new OpenApiSecurityRequirement
+    //{
+
+    //};
+
+    //options.AddSecurityRequirement((openapiDocument) => openapiDocument.Security = [new OpenApiSecurityRequirement {
+    // new OpenApiSecuritySchemeReference("temp") {
+    //      Reference = new OpenApiReferenceWithDescription {
+    //           Type = ReferenceType.SecurityScheme,
+    //           Id = JwtBearerDefaults.AuthenticationScheme
+    //      }
+    // }
+    //}]);
 });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer();
 

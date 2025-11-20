@@ -3,4 +3,4 @@ using SharedLibrary.Messaging;
 
 namespace SharedLibrary.BloodPressureDomain.User.UserLogin;
 
-public sealed record UserLoginCommand(Email Email, string Password) : ICommand<UserId>;
+public sealed record UserLoginCommand(Email Email, string Password) : ICommand<string>;

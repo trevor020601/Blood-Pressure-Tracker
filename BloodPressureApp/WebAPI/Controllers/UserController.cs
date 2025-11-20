@@ -53,7 +53,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> LoginAsync(string email,
                                                 string password,
-                                                ICommandHandler<UserLoginCommand, UserId> handler,
+                                                ICommandHandler<UserLoginCommand, string> handler,
                                                 CancellationToken cancellationToken)
     {
         var command = new UserLoginCommand(Email.Create(email), password);
