@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedLibrary.Authentication.Policies;
 
-namespace SharedLibrary.DataAccess.Configurations;
+namespace SharedLibrary.DataAccess.Configurations.Policy;
 
 internal sealed class AdminPolicyConfiguration : IEntityTypeConfiguration<AdminPolicy>
 {

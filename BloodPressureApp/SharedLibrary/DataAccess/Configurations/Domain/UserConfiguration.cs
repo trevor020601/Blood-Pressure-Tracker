@@ -4,7 +4,7 @@ using SharedLibrary.BloodPressureDomain.User;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
 using SharedLibrary.DataAccess.Converters;
 
-namespace SharedLibrary.DataAccess.Configurations;
+namespace SharedLibrary.DataAccess.Configurations.Domain;
 
 internal class UserConfiguration : IEntityTypeConfiguration<User>
 {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedLibrary.BloodPressureDomain.Medication;
 using SharedLibrary.DataAccess.Converters;
 
-namespace SharedLibrary.DataAccess.Configurations;
+namespace SharedLibrary.DataAccess.Configurations.Domain;
 
 internal class MedicationConfiguration : IEntityTypeConfiguration<Medication>
 {

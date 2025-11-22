@@ -4,7 +4,7 @@ using SharedLibrary.BloodPressureDomain.HealthInformation;
 using SharedLibrary.BloodPressureDomain.Patient;
 using SharedLibrary.BloodPressureDomain.User;
 
-namespace SharedLibrary.DataAccess.Configurations;
+namespace SharedLibrary.DataAccess.Configurations.Domain;
 
 internal class PatientConfiguration : IEntityTypeConfiguration<Patient>
 {

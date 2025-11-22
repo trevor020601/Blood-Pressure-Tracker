@@ -4,7 +4,7 @@ using SharedLibrary.BloodPressureDomain.BloodPressureReading;
 using SharedLibrary.BloodPressureDomain.TrackingDevice;
 using SharedLibrary.DataAccess.Converters;
 
-namespace SharedLibrary.DataAccess.Configurations;
+namespace SharedLibrary.DataAccess.Configurations.Domain;
 
 internal class BloodPressureReadingConfiguration : IEntityTypeConfiguration<BloodPressureReading>
 {
