@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
 using SharedLibrary.Authentication;
+using SharedLibrary.Authentication.Policies;
 using SharedLibrary.BloodPressureDomain.User.UserLogin;
 using SharedLibrary.BloodPressureDomain.User.UserRegister;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
@@ -60,6 +61,12 @@ public sealed class UserRepository(IApplicationDbContext context,
         user.Raise(new UserRegisterDomainEvent(user.Id));
 
         await context.Users.AddAsync(user, cancellationToken);
+
+        await context.UserPolicies.AddAsync(new UserPolicy { 
+            UserId = user.Id.Value,
+            PolicyId = Policy.UserId
+        }, 
+        cancellationToken);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
