@@ -20,8 +20,6 @@ public interface IApplicationDbContext
 
     public DbSet<UserPolicy> UserPolicies { get; set; }
 
-    public DbSet<AdminPolicy> AdminPolicies { get; set; }
-
     public DbSet<Patient> Patients { get; set; }
 
     public DbSet<HealthInformation> HealthInformations { get; set; }
@@ -54,8 +52,6 @@ public sealed class ApplicationDbContext : DbContext, IUnitOfWork, IApplicationD
     public DbSet<Policy> Policies { get; set; }
 
     public DbSet<UserPolicy> UserPolicies { get; set; }
-
-    public DbSet<AdminPolicy> AdminPolicies { get; set; }
 
     public DbSet<Patient> Patients { get; set; }
 

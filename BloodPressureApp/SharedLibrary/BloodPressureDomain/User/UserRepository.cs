@@ -91,7 +91,7 @@ public sealed class UserRepository(IApplicationDbContext context,
             return Result.Result.Failure<string>(UserErrors.IncorrectPassword);
         }
 
-        var token = jwtProvider.Generate(user);
+        var token = await jwtProvider.Generate(user);
 
         user.Raise(new UserLoginDomainEvent(user.Id));
 
