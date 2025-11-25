@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
 using SharedLibrary.Authentication;
 using SharedLibrary.Authentication.Policies;
+using SharedLibrary.Authentication.RefreshToken;
 using SharedLibrary.BloodPressureDomain.User.UserLogin;
 using SharedLibrary.BloodPressureDomain.User.UserRegister;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
@@ -20,7 +21,7 @@ public interface IUserRepository
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<bool> ExistsAsync(string email, CancellationToken cancellationToken);
     Task<Result<UserId>> CreateAsync(Email email, string password, CancellationToken cancellationToken);
-    Task<Result<string>> LoginAsync(Email email, string password, CancellationToken cancellationToken);
+    Task<Result<UserLoginResponse>> LoginAsync(Email email, string password, CancellationToken cancellationToken);
     Task<Result.Result> DeleteAsync(Email email, CancellationToken cancellationToken);
 }
 
@@ -75,29 +76,41 @@ public sealed class UserRepository(IApplicationDbContext context,
         return Result.Result.Success(user.Id);
     }
 
-    public async Task<Result<string>> LoginAsync(Email email,
+    public async Task<Result<UserLoginResponse>> LoginAsync(Email email,
                                                  string password,
                                                  CancellationToken cancellationToken)
     {
         var user = await GetByEmailAsync(email.Value, cancellationToken);
         if (user is null)
         {
-            return Result.Result.Failure<string>(UserErrors.UserDoesNotExist);
+            return Result.Result.Failure<UserLoginResponse>(UserErrors.UserDoesNotExist);
         }
 
         var verified = passwordHasher.Verify(password, user.Password);
         if (!verified)
         {
-            return Result.Result.Failure<string>(UserErrors.IncorrectPassword);
+            return Result.Result.Failure<UserLoginResponse>(UserErrors.IncorrectPassword);
         }
 
         var token = await jwtProvider.Generate(user);
+
+        var refreshToken = new RefreshToken
+        {
+            Id = Guid.CreateVersion7(),
+            UserId = user.Id.Value,
+            Token = jwtProvider.GenerateRefreshToken(),
+            ExpiresOn = DateTime.Now.AddDays(7)
+        };
+
+        await context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         user.Raise(new UserLoginDomainEvent(user.Id));
 
         await domainEventsPublisher.PublishDomainEventsAsync();
 
-        return Result.Result.Success(token);
+        return Result.Result.Success(new UserLoginResponse(token, refreshToken.Token));
     }
 
     public async Task<Result.Result> DeleteAsync(Email email,

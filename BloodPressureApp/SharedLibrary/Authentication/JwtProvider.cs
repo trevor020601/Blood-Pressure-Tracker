@@ -7,6 +7,7 @@ using SharedLibrary.Attributes;
 using SharedLibrary.BloodPressureDomain.User;
 using SharedLibrary.DataAccess;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace SharedLibrary.Authentication;
@@ -15,6 +16,7 @@ namespace SharedLibrary.Authentication;
 public interface IJwtProvider
 {
     Task<string> Generate(User user);
+    string GenerateRefreshToken();
 }
 
 internal sealed class JwtProvider(IOptions<JwtOptions> options, IApplicationDbContext applicationDbContext) : IJwtProvider
@@ -50,5 +52,10 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options, IApplicationDbCo
         var handler = new JsonWebTokenHandler();
 
         return handler.CreateToken(tokenDescriptor);
+    }
+
+    public string GenerateRefreshToken()
+    {
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
     }
 }

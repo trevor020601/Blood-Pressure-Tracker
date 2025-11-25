@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
 using SharedLibrary.Authentication.Policies;
+using SharedLibrary.Authentication.RefreshToken;
 using SharedLibrary.BloodPressureDomain.BloodPressureReading;
 using SharedLibrary.BloodPressureDomain.HealthInformation;
 using SharedLibrary.BloodPressureDomain.Medication;
@@ -19,6 +20,8 @@ public interface IApplicationDbContext
     public DbSet<User> Users { get; set; }
 
     public DbSet<UserPolicy> UserPolicies { get; set; }
+
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public DbSet<Patient> Patients { get; set; }
 
@@ -54,6 +57,8 @@ public sealed class ApplicationDbContext : DbContext, IUnitOfWork, IApplicationD
     public DbSet<UserPolicy> UserPolicies { get; set; }
 
     public DbSet<Patient> Patients { get; set; }
+
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public DbSet<HealthInformation> HealthInformations { get; set; }
 

@@ -3,9 +3,9 @@ using SharedLibrary.Result;
 
 namespace SharedLibrary.BloodPressureDomain.User.UserLogin;
 
-internal sealed class UserLoginCommandHandler(IUserRepository userRepository) : ICommandHandler<UserLoginCommand, string>
+internal sealed class UserLoginCommandHandler(IUserRepository userRepository) : ICommandHandler<UserLoginCommand, UserLoginResponse>
 {
-    public async Task<Result<string>> HandleAsync(UserLoginCommand command, CancellationToken cancellationToken)
+    public async Task<Result<UserLoginResponse>> HandleAsync(UserLoginCommand command, CancellationToken cancellationToken)
     {
         return await userRepository.LoginAsync(command.Email, command.Password, cancellationToken);
     }
