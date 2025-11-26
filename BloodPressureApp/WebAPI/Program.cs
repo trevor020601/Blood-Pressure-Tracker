@@ -88,6 +88,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(resource => resource.AddService("BloodPressureApp"))
     .WithMetrics(metrics =>

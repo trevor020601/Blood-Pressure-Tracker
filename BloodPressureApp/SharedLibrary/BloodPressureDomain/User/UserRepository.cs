@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SharedLibrary.Attributes;
 using SharedLibrary.Authentication;
@@ -13,6 +14,7 @@ using SharedLibrary.Events;
 using SharedLibrary.PasswordHasher;
 using SharedLibrary.Result;
 using SharedLibrary.UnitOfWork;
+using System.Security.Claims;
 
 namespace SharedLibrary.BloodPressureDomain.User;
 
@@ -24,6 +26,7 @@ public interface IUserRepository
     Task<Result<UserId>> CreateAsync(Email email, string password, CancellationToken cancellationToken);
     Task<Result<UserLoginResponse>> LoginAsync(Email email, string password, CancellationToken cancellationToken);
     Task<Result<UserLoginRefreshTokenResponse>> LoginRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken);
+    Task<Result<bool>> RevokeRefreshTokensAsync(UserId userId, CancellationToken cancellationToken);
     Task<Result.Result> DeleteAsync(Email email, CancellationToken cancellationToken);
 }
 
@@ -31,7 +34,8 @@ public sealed class UserRepository(IApplicationDbContext context,
                                    IUnitOfWork unitOfWork,
                                    IPasswordHasher passwordHasher,
                                    IJwtProvider jwtProvider, 
-                                   IDomainEventsPublisher domainEventsPublisher) : IUserRepository
+                                   IDomainEventsPublisher domainEventsPublisher,
+                                   IHttpContextAccessor httpContextAccessor) : IUserRepository
 {
     public async Task<User?> GetByEmailAsync(string email,
                                              CancellationToken cancellationToken)
@@ -139,6 +143,26 @@ public sealed class UserRepository(IApplicationDbContext context,
         await domainEventsPublisher.PublishDomainEventsAsync();
 
         return Result.Result.Success(new UserLoginRefreshTokenResponse(accessToken, token.Token));
+    }
+
+    public async Task<Result<bool>> RevokeRefreshTokensAsync(UserId userId, CancellationToken cancellationToken)
+    {
+        Guid? contextUserId = Guid.TryParse(httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier), out Guid parsed) ? 
+            parsed : 
+            null;
+
+        if (userId.Value != contextUserId)
+        {
+            return Result.Result.Failure<bool>(UserErrors.CannotRevokeRefreshTokens);
+        }
+
+        await context.RefreshTokens
+            .Where(r => r.UserId == userId.Value)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        // Domain Event?
+
+        return Result.Result.Success(true);
     }
 
     public async Task<Result.Result> DeleteAsync(Email email,

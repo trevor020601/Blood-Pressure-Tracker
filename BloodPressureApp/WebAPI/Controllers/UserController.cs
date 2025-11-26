@@ -3,6 +3,7 @@ using SharedLibrary.BloodPressureDomain.User;
 using SharedLibrary.BloodPressureDomain.User.UserLogin;
 using SharedLibrary.BloodPressureDomain.User.UserLoginRefreshToken;
 using SharedLibrary.BloodPressureDomain.User.UserRegister;
+using SharedLibrary.BloodPressureDomain.User.UserRevokeRefreshTokens;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
 using SharedLibrary.Messaging;
 
@@ -71,5 +72,16 @@ public class UserController : ControllerBase
         var command = new UserLoginRefreshTokenCommand(refreshToken);
         var result = await handler.HandleAsync(command, cancellationToken);
         return Ok(result);
+    }
+
+    [HttpDelete]
+    [Route("{id:guid}/RevokeRefreshTokens")]
+    public async Task<IActionResult> RevokeRefreshTokensAsync(Guid id,
+                                                              ICommandHandler<UserRevokeRefreshTokensCommand, bool> handler,
+                                                              CancellationToken cancellationToken)
+    {
+        var command = new UserRevokeRefreshTokensCommand(new UserId(id));
+        var result = await handler.HandleAsync(command, cancellationToken);
+        return result.IsSuccess ? NoContent() : BadRequest();
     }
 }
