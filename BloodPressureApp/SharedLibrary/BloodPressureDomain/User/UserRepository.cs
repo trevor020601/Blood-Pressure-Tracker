@@ -5,6 +5,7 @@ using SharedLibrary.Authentication;
 using SharedLibrary.Authentication.Policies;
 using SharedLibrary.Authentication.RefreshToken;
 using SharedLibrary.BloodPressureDomain.User.UserLogin;
+using SharedLibrary.BloodPressureDomain.User.UserLoginRefreshToken;
 using SharedLibrary.BloodPressureDomain.User.UserRegister;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
 using SharedLibrary.DataAccess;
@@ -22,6 +23,7 @@ public interface IUserRepository
     Task<bool> ExistsAsync(string email, CancellationToken cancellationToken);
     Task<Result<UserId>> CreateAsync(Email email, string password, CancellationToken cancellationToken);
     Task<Result<UserLoginResponse>> LoginAsync(Email email, string password, CancellationToken cancellationToken);
+    Task<Result<UserLoginRefreshTokenResponse>> LoginRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken);
     Task<Result.Result> DeleteAsync(Email email, CancellationToken cancellationToken);
 }
 
@@ -111,6 +113,32 @@ public sealed class UserRepository(IApplicationDbContext context,
         await domainEventsPublisher.PublishDomainEventsAsync();
 
         return Result.Result.Success(new UserLoginResponse(token, refreshToken.Token));
+    }
+
+    public async Task<Result<UserLoginRefreshTokenResponse>> LoginRefreshTokenAsync(string refreshToken, 
+                                                                                    CancellationToken cancellationToken)
+    {
+        var token = await context.RefreshTokens
+            .Include(r => r.User)
+            .FirstOrDefaultAsync(r => r.Token == refreshToken, cancellationToken);
+
+        if (token is null || token.ExpiresOn == DateTime.Now)
+        {
+            return Result.Result.Failure<UserLoginRefreshTokenResponse>(UserErrors.ExpiredRefreshToken);
+        }
+
+        var accessToken = await jwtProvider.Generate(token.User);
+
+        token.Token = jwtProvider.GenerateRefreshToken();
+        token.ExpiresOn = DateTime.Now.AddDays(7);
+
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        token.User.Raise(new UserLoginDomainEvent(token.User.Id));
+
+        await domainEventsPublisher.PublishDomainEventsAsync();
+
+        return Result.Result.Success(new UserLoginRefreshTokenResponse(accessToken, token.Token));
     }
 
     public async Task<Result.Result> DeleteAsync(Email email,

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SharedLibrary.BloodPressureDomain.User;
 using SharedLibrary.BloodPressureDomain.User.UserLogin;
+using SharedLibrary.BloodPressureDomain.User.UserLoginRefreshToken;
 using SharedLibrary.BloodPressureDomain.User.UserRegister;
 using SharedLibrary.BloodPressureDomain.ValueObjects;
 using SharedLibrary.Messaging;
@@ -57,6 +58,17 @@ public class UserController : ControllerBase
                                                 CancellationToken cancellationToken)
     {
         var command = new UserLoginCommand(Email.Create(email), password);
+        var result = await handler.HandleAsync(command, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("LoginRefreshToken")]
+    public async Task<IActionResult> LoginRefreshTokenAsync(string refreshToken,
+                                                            ICommandHandler<UserLoginRefreshTokenCommand, UserLoginRefreshTokenResponse> handler,
+                                                            CancellationToken cancellationToken)
+    {
+        var command = new UserLoginRefreshTokenCommand(refreshToken);
         var result = await handler.HandleAsync(command, cancellationToken);
         return Ok(result);
     }
