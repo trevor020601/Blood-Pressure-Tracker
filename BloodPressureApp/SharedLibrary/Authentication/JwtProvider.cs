@@ -29,7 +29,7 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options, IApplicationDbCo
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var policyNames = await applicationDbContext.UserPolicies
-            .Where(up => up.UserId == user.Id.Value)
+            .Where(up => up.UserId == user.Id)
             .Select(up => up.Policy.Name)
             .ToListAsync();
 

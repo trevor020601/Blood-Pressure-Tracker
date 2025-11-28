@@ -70,7 +70,7 @@ public sealed class UserRepository(IApplicationDbContext context,
         await context.Users.AddAsync(user, cancellationToken);
 
         await context.UserPolicies.AddAsync(new UserPolicy { 
-            UserId = user.Id.Value,
+            UserId = user.Id,
             PolicyId = Policy.UserId
         }, 
         cancellationToken);
@@ -102,8 +102,8 @@ public sealed class UserRepository(IApplicationDbContext context,
 
         var refreshToken = new RefreshToken
         {
-            Id = Guid.CreateVersion7(),
-            UserId = user.Id.Value,
+            Id = new RefreshTokenId(Guid.CreateVersion7()),
+            UserId = user.Id,
             Token = jwtProvider.GenerateRefreshToken(),
             ExpiresOn = DateTime.Now.AddDays(7)
         };
@@ -157,7 +157,7 @@ public sealed class UserRepository(IApplicationDbContext context,
         }
 
         await context.RefreshTokens
-            .Where(r => r.UserId == userId.Value)
+            .Where(r => r.UserId == userId)
             .ExecuteDeleteAsync(cancellationToken);
 
         // Domain Event?
