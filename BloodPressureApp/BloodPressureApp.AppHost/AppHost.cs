@@ -1,7 +1,11 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-// TODO: Add sql server and entity framework core configuration
+// TODO: Figure out how to configure this...
+var database = builder.AddSqlServer("database")
+    .AddDatabase("BloodPressureAppDb");
 
-builder.AddProject<Projects.WebAPI>("webapi");
+builder.AddProject<Projects.WebAPI>("webapi")
+    .WithReference(database)
+    .WaitFor(database);
 
 await builder.Build().RunAsync();
