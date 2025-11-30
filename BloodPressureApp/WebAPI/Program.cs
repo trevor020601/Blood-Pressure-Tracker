@@ -97,6 +97,7 @@ builder.Services.AddOpenTelemetry()
         metrics
             .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation()
+            .AddSqlClientInstrumentation()
             .AddOtlpExporter();
     })
     .WithTracing(tracing =>
@@ -105,7 +106,7 @@ builder.Services.AddOpenTelemetry()
             .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation()
             .AddEntityFrameworkCoreInstrumentation()
-            //.AddSqlClientInstrumentation() Not sure if I need this or not...
+            .AddSqlClientInstrumentation()
             .AddOtlpExporter();
     });
 
