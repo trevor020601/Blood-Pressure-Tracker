@@ -24,12 +24,7 @@ namespace SharedLibrary.Attributes;
 ///     
 /// </summary>
 [AttributeUsage(AttributeTargets.Interface)]
-public class InjectDependencyAttribute : Attribute
+public class InjectDependencyAttribute(ServiceLifetime lifetime) : Attribute
 {
-    public ServiceLifetime Lifetime { get; }
-
-    public InjectDependencyAttribute(ServiceLifetime lifetime)
-    {
-        Lifetime = lifetime;
-    }
+    public ServiceLifetime Lifetime { get; } = lifetime;
 }
