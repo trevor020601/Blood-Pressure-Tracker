@@ -28,6 +28,7 @@ builder.Services.AddProblemDetails(configure =>
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+builder.Services.ConfigureOptions<ConnectionStringOptionsSetup>();
 builder.Services.AddSingleton<UpdateAuditableEntitiesInterceptor>();
 
 // Add services to the container.
@@ -35,7 +36,7 @@ builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
 {
     var auditableInterceptor = sp.GetService<UpdateAuditableEntitiesInterceptor>()!;
 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("")) // Should probably be a secret or continue use of options pattern
+    options.UseSqlServer(builder.Configuration.GetSection("ConnectionString").Get<ConnectionStringOptions>()!.Database)
            .AddInterceptors(auditableInterceptor);
 });
 
